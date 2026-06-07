@@ -55,9 +55,25 @@ pipeline {
             }
         }
 
+        // stage('Install Dependencies') {
+        //     steps {
+        //         sh 'npm install'
+        //     }
+        // }
+
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh '/opt/homebrew/bin/npm install'
+            }
+        }
+
+        stage('Check Environment') {
+        steps {
+            sh 'echo $PATH'
+            sh 'which node || true'
+            sh 'which npm || true'
+            sh 'node -v || true'
+            sh 'npm -v || true'
             }
         }
 
