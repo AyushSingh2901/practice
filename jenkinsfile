@@ -1,0 +1,25 @@
+pipeline{
+    agent any
+    stages{
+        stage('initialize app'){
+            steps{
+                sh 'npm init -y'
+            }
+        }
+        stage('install'){
+            steps{
+                sh 'npm install express'
+            }
+        }
+        stage('docker build'){
+            steps{
+                sh 'docker build -t practice .'
+            }
+        }
+        stage('docker run'){
+            steps{
+                sh 'docker run -d -p 2929:2929 practice'
+            }
+        }
+    }
+}
