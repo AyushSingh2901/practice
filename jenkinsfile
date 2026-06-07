@@ -17,8 +17,8 @@ pipeline {
         stage('Docker Run') {
             steps {
                 sh 
-                'docker rm -f practice-container || true'
-                'docker run -d --name practice-container -p 2929:2929 practice'
+                docker rm -f practice-container || true
+                docker run -d --name practice-container -p 2929:2929 practice
                 
             }
         }
