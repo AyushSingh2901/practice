@@ -3,9 +3,20 @@ pipeline {
 
     stages {
 
+        stage('checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Maven test') {
+            steps {
+                sh ' mvn test'
+            }
+        }
+
         stage('Docker Build') {
             steps {
-                sh '/usr/local/bin/docker build -t practice .'
+                sh ' build -t practice .'
             }
         }
 
@@ -13,6 +24,24 @@ pipeline {
             steps {
                 sh '/usr/local/bin/docker rm -f practice-container || true'
                 sh '/usr/local/bin/docker run -d --name practice-container -p 2929:2929 practice'
+            }
+        }
+        stage('Docker login') {
+            steps{
+                sh ''
+            }
+        }
+        stage('Docker login') {
+            steps{
+                withCredentials([usernamePassword(CredentialsId: DOCKER_CRED, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
+                }
+            }
+        }
+        stage('Docker push') {
+            steps{
+                sh "docker push ${DOCKER_HUB_USER}/${SERVER_IMAGE_NAME}:${BUILD_TAG}"
+                sh "docker push ${DOCKER_HUB_USER}/${SERVER_IMAGE_NAME}:latest"
             }
         }
     }
