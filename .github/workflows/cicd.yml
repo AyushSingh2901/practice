@@ -26,7 +26,7 @@ jobs:
         run: docker build -t ${{ secrets.docker_user }}/practice_image:v1 .
 
   docker-push:
-    runs on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: docker login
