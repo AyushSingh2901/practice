@@ -11,29 +11,30 @@ pipeline {
 
         stage('Check Environment') {
             steps {
-                sh 'echo "PATH=$PATH"'
-                sh '/usr/local/bin/node -v'
-                sh '/usr/local/bin/npm -v'
-                sh '/usr/local/bin/docker --version'
+                sh 'echo $PATH'
+                sh 'which node'
+                sh 'which npm'
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh '/usr/local/bin/npm install'
+                sh 'npm install'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh '/usr/local/bin/docker build -t practice .'
+                sh 'docker build -t practice .'
             }
         }
 
         stage('Docker Run') {
             steps {
-                sh '/usr/local/bin/docker rm -f practice-container || true'
-                sh '/usr/local/bin/docker run -d --name practice-container -p 2929:2929 practice'
+                sh 'docker rm -f practice-container || true'
+                sh 'docker run -d --name practice-container -p 2929:2929 practice'
             }
         }
 
@@ -46,10 +47,7 @@ pipeline {
                         passwordVariable: 'DOCKER_PASSWORD'
                     )
                 ]) {
-                    sh '''
-                    echo "$DOCKER_PASSWORD" | /usr/local/bin/docker login \
-                    -u "$DOCKER_USERNAME" --password-stdin
-                    '''
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                 }
             }
         }
@@ -63,10 +61,8 @@ pipeline {
                         passwordVariable: 'DOCKER_PASSWORD'
                     )
                 ]) {
-                    sh '''
-                    /usr/local/bin/docker tag practice $DOCKER_USERNAME/practice_image:v1
-                    /usr/local/bin/docker push $DOCKER_USERNAME/practice_image:v1
-                    '''
+                    sh 'docker tag practice $DOCKER_USERNAME/practice_image:v1'
+                    sh 'docker push $DOCKER_USERNAME/practice_image:v1'
                 }
             }
         }
