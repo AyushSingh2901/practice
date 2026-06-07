@@ -1,29 +1,25 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage('nikhil'){
-            steps{
-                echo 'nikhil bhooka'
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
             }
         }
-        stage('initialize app'){
-            steps{
-                sh 'npm init -y'
-            }
-        }
-        stage('install'){
-            steps{
-                sh 'npm install express'
-            }
-        }
-        stage('docker build'){
-            steps{
+
+        stage('Docker Build') {
+            steps {
                 sh 'docker build -t practice .'
             }
         }
-        stage('docker run'){
-            steps{
-                sh 'docker run -d -p 2929:2929 practice'
+
+        stage('Docker Run') {
+            steps {
+                sh 
+                'docker rm -f practice-container || true'
+                'docker run -d --name practice-container -p 2929:2929 practice'
+                
             }
         }
     }
