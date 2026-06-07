@@ -1,6 +1,11 @@
 pipeline{
-    agents any
+    agent any
     stages{
+        stage('nikhil'){
+            steps{
+                echo 'nikhil bhooka'
+            }
+        }
         stage('initialize app'){
             steps{
                 sh 'npm init -y'
