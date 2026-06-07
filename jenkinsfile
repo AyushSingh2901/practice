@@ -26,11 +26,7 @@ pipeline {
                 sh '/usr/local/bin/docker run -d --name practice-container -p 2929:2929 practice'
             }
         }
-        stage('Docker login') {
-            steps{
-                sh ''
-            }
-        }
+        
         stage('Docker login') {
             steps{
                 withCredentials([usernamePassword(CredentialsId: DOCKER_CRED, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
