@@ -25,6 +25,9 @@ jobs:
       - name: docker build image
         run: docker build -t ${{ secrets.docker_user }}/practice_image:v1 .
 
+  docker-push:
+
+    steps:
       - name: docker login
         uses: docker/login-action@v3
         with:
