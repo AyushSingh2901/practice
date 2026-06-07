@@ -1,49 +1,3 @@
-// pipeline {
-//     agent any
-
-//     stages {
-
-//         stage('checkout') {
-//             steps {
-//                 checkout scm
-//             }
-//         }
-//         stage('Maven test') {
-//             steps {
-//                 sh ' mvn test'
-//             }
-//         }
-
-//         stage('Docker Build') {
-//             steps {
-//                 sh 'docker build -t practice .'
-//             }
-//         }
-
-//         stage('Docker Run') {
-//             steps {
-//                 sh '/usr/local/bin/docker rm -f practice-container || true'
-//                 sh '/usr/local/bin/docker run -d --name practice-container -p 2929:2929 practice'
-//             }
-//         }
-        
-//         stage('Docker login') {
-//             steps{
-//                 withCredentials([usernamePassword(CredentialsId: DOCKER_CRED, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-//                     sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-//                 }
-//             }
-//         }
-//         stage('Docker push') {
-//             steps{
-//                 sh "docker push ${DOCKER_HUB_USER}/${SERVER_IMAGE_NAME}:${BUILD_TAG}"
-//                 sh "docker push ${DOCKER_HUB_USER}/${SERVER_IMAGE_NAME}:latest"
-//             }
-//         }
-//     }
-// }
-
-
 pipeline {
     agent any
 
@@ -55,25 +9,18 @@ pipeline {
             }
         }
 
-        // stage('Install Dependencies') {
-        //     steps {
-        //         sh 'npm install'
-        //     }
-        // }
-
-        stage('Install Dependencies') {
+        stage('Check Environment') {
             steps {
-                sh '/opt/homebrew/bin/npm install'
+                sh 'echo "PATH=$PATH"'
+                sh '/usr/local/bin/node -v'
+                sh '/usr/local/bin/npm -v'
+                sh '/usr/local/bin/docker --version'
             }
         }
 
-        stage('Check Environment') {
-        steps {
-            sh 'echo $PATH'
-            sh 'which node || true'
-            sh 'which npm || true'
-            sh 'node -v || true'
-            sh 'npm -v || true'
+        stage('Install Dependencies') {
+            steps {
+                sh '/usr/local/bin/npm install'
             }
         }
 
@@ -99,15 +46,28 @@ pipeline {
                         passwordVariable: 'DOCKER_PASSWORD'
                     )
                 ]) {
-                    sh 'echo "$DOCKER_PASSWORD" | /usr/local/bin/docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    sh '''
+                    echo "$DOCKER_PASSWORD" | /usr/local/bin/docker login \
+                    -u "$DOCKER_USERNAME" --password-stdin
+                    '''
                 }
             }
         }
 
         stage('Docker Push') {
             steps {
-                sh '/usr/local/bin/docker tag practice $DOCKER_USERNAME/practice_image:v1'
-                sh '/usr/local/bin/docker push $DOCKER_USERNAME/practice_image:v1'
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'DOCKER_CRED',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                    /usr/local/bin/docker tag practice $DOCKER_USERNAME/practice_image:v1
+                    /usr/local/bin/docker push $DOCKER_USERNAME/practice_image:v1
+                    '''
+                }
             }
         }
     }
