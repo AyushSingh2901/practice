@@ -13,14 +13,13 @@ pipeline {
                 sh 'docker build -t practice .'
             }
         }
-
         stage('Docker Run') {
             steps {
-                sh 
-                docker rm -f practice-container || true
-                docker run -d --name practice-container -p 2929:2929 practice
-                
+                sh 'docker rm -f practice-container || true'
+                sh 'docker run -d --name practice-container -p 2929:2929 practice'
             }
         }
+           
+        
     }
 }
