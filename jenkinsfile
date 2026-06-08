@@ -38,12 +38,6 @@ pipeline {
             }
         }
 
-        stage('Security Check') {
-            steps {
-                echo 'Scanning Docker image for vulnerabilities'
-            }
-        }
-
         stage('Docker Login') {
             steps {
                 withCredentials([
