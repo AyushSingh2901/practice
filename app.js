@@ -4,11 +4,11 @@ app.get('/',(req,res)=>{
     res.send("hello guies");
 })
 app.get('/ayush',(req,res)=>{
-    res.send("kaise hain aaplog");
+    res.send("this is my devops exam");
 })
 app.get('/kittu',(req,res)=>{
-    res.send("ummed karta hun badiya hee honge");
+    res.send("i feel it will go good ");
 })
 app.listen(2929,()=>{
-    console.log("yhn sab chutiya hai");
+    console.log("Jai Shree Ram");
 })

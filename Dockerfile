@@ -5,5 +5,5 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 2929
+EXPOSE 
 CMD ["node","app.js"]

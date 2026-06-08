@@ -12,5 +12,13 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AyushSingh2901/practice.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AyushSingh2901/practice/issues"
+  },
+  "homepage": "https://github.com/AyushSingh2901/practice#readme"
 }
